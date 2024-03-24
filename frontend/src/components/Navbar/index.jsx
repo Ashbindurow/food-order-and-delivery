@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   HomeOutlined,
   ShoppingCartOutlined,
@@ -11,17 +10,35 @@ import {
   BookOutlined,
   EnvironmentOutlined,
 } from "@ant-design/icons";
-import { Button, ButtonGroup, useDisclosure } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  MenuButton,
+  useDisclosure,
+  Menu,
+  Avatar,
+  MenuList,
+  MenuItem,
+} from "@chakra-ui/react";
 import { NavLink, Link } from "react-router-dom";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import { motion } from "framer-motion";
 import ModalPopup from "../PopupModel";
 import ModalPopupSignIn from "../PopupModal_SignIn";
+import { useState, useEffect } from "react";
+import axios from "../../utils/axios.js";
+import { useAuth } from "../../utils/authContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 import "./Navbar.css";
 
 const Navbar = () => {
-  const [dark, setDark] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userData, setUserData] = useState([]);
+
+  const { isLoggedIn, login, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   const {
     isOpen: isLogInOpen,
@@ -35,13 +52,31 @@ const Navbar = () => {
     onOpen: onOpenSignUp,
   } = useDisclosure();
 
-  const toggleCheck = () => {
-    setDark(!dark);
+  const handleLogin = async () => {
+    login(); // Update authentication state upon successful login
+    onCloseLogIn(); //closes the login model
   };
+  const handleLogout = async () => {
+    logout();
+  };
+
+  const fetchUserData = async () => {
+    const response = await axios.get(`/user/${localStorage.getItem("id")}`);
+    // console.log(response.data);
+    setUserData(response.data);
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <>
-      <ModalPopup isOpen={isLogInOpen} onClose={onCloseLogIn} />
+      <ModalPopup
+        isOpen={isLogInOpen}
+        onClose={onCloseLogIn}
+        onLogin={handleLogin}
+      />
       <ModalPopupSignIn isOpen={isSignUpOpen} onClose={onSignUpLogIn} />
 
       <motion.nav
@@ -51,7 +86,13 @@ const Navbar = () => {
         className="navbar"
       >
         <motion.div whileHover={{ scale: 1.1 }} className="logo-div">
-          <img src="dfd-logo.png" alt="brand-logo" className="logo" />
+          <img
+            src="logo-food-app.png"
+            alt="brand-logo"
+            className="logo"
+            onClick={() => navigate("/")}
+            style={{ cursor: "pointer" }}
+          />
         </motion.div>
         <div className="search-box">
           <input type="text" placeholder="Search" />
@@ -92,19 +133,29 @@ const Navbar = () => {
           </li>
         </ul>
 
-        <ButtonGroup ml={3} gap={2} className="button-group">
-          <Button variant="outline" colorScheme="yellow" onClick={onOpenSignUp}>
-            Create Account
-          </Button>
-
-          <Button variant="ghost" colorScheme="yellow" onClick={onOpenLogIn}>
-            Log In
-          </Button>
-        </ButtonGroup>
-        {dark ? (
-          <SunFilled onClick={toggleCheck} className="darkmode" />
+        {isLoggedIn ? (
+          <Menu className="profile_drop_down">
+            <MenuButton>
+              <Avatar src={userData.picture} />
+            </MenuButton>
+            <MenuList color="black">
+              <MenuItem>Edit Profile</MenuItem>
+              <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            </MenuList>
+          </Menu>
         ) : (
-          <MoonFilled onClick={toggleCheck} className="darkmode" />
+          <ButtonGroup ml={3} gap={2} className="button-group">
+            <Button
+              variant="outline"
+              colorScheme="yellow"
+              onClick={onOpenSignUp}
+            >
+              Create Account
+            </Button>
+            <Button variant="ghost" colorScheme="yellow" onClick={onOpenLogIn}>
+              Log In
+            </Button>
+          </ButtonGroup>
         )}
       </motion.nav>
     </>

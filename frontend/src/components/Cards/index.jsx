@@ -1,12 +1,78 @@
-// import "./card.css";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Text,
+  Stack,
+  Image,
+  Heading,
+  Divider,
+  ButtonGroup,
+  Button,
+  useDisclosure,
+} from "@chakra-ui/react";
+import axios from "../../utils/axios";
 
-const Card = () => {
+const Cards = ({ menuItem }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleAddToCart = async menuItemId => {
+    try {
+      const response = await axios.post("/carts", {
+        userId: localStorage.getItem("id"), // Replace with the actual user ID
+        itemId: menuItemId, // Assuming item._id is the unique identifier for the item
+        quantity: 1, // You can adjust the quantity as needed
+      });
+      console.log("Item added to cart:", response.data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <div
-      className="card_page"
-      style={{ backgroundColor: "black", color: "white", height: "100vh" }}
-    ></div>
+    <Card maxW="sm">
+      <CardBody>
+        <Image
+          src={menuItem.image}
+          alt="item image"
+          w="100%"
+          h="200px"
+          objectFit="cover"
+          cursor="pointer"
+          onClick={onOpen}
+          transition="0.3s"
+          _hover={{ transform: "scale(1.1)" }}
+        />
+        <Stack mt="2" spacing="2">
+          <Heading size="md">{menuItem.itemName}</Heading>
+          <Text noOfLines={2}>{menuItem.description}</Text>
+          <Text color="green.600" fontWeight="7" fontSize="2xl">
+            Rs.{menuItem.price}
+          </Text>
+        </Stack>
+      </CardBody>
+      <CardFooter>
+        <ButtonGroup
+          spacing="2"
+          justifyContent="center"
+          marginLeft="auto"
+          marginRight="auto"
+        >
+          <Button variant="solid" colorScheme="pink" border="2px">
+            Buy now
+          </Button>
+          <Button
+            variant="outline"
+            colorScheme="pink"
+            onClick={() => handleAddToCart(menuItem._id)}
+          >
+            Add to cart
+          </Button>
+        </ButtonGroup>
+      </CardFooter>
+    </Card>
   );
 };
 
-export default Card;
+export default Cards;

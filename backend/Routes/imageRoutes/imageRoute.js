@@ -3,6 +3,8 @@ import multer from "multer";
 
 const router = express.Router();
 
+router.use(express.static("public"));
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public");

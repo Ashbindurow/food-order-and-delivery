@@ -15,15 +15,18 @@ const menuItemSchema = Schema(
       type: Number,
       required: true,
     },
-    tags: [{ type: String }],
-    rating: {
-      type: Number,
+    image: {
+      type: String,
       required: true,
     },
-    availablity: {
+    tags: [{ type: String }],
+    rating: [{ type: Number }],
+    availability: {
       type: Boolean,
       required: true,
     },
+    review: String,
+    quantity: Number,
   },
   { timestamps: true }
 );

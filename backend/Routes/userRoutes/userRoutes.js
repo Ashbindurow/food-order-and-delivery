@@ -29,7 +29,7 @@ router.post("/signup", async (req, res) => {
 });
 
 //user login route
-router.post("/login", checkToken, async (req, res) => {
+router.post("/login", async (req, res) => {
   const body = { ...req.body };
   const user = await User.findOne({ email: body.email });
   if (!user) {
@@ -79,6 +79,14 @@ router.get("/profile/:id", async (req, res) => {
       },
     },
   ]);
+});
+
+//get user by id
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findById(id);
+  user.password = "";
+  res.status(201).json(user);
 });
 
 export default router;

@@ -12,21 +12,35 @@ import {
   Input,
   Button,
   useDisclosure,
+  Toast,
 } from "@chakra-ui/react";
-import axios from "axios";
+import axios from "../../utils/axios.js";
 import { useState, useEffect } from "react";
+import { saveCreds } from "../../utils/index.js";
+import { useAuth } from "../../utils/authContext.jsx";
+import { ToastContainer, toast } from "react-toastify";
 
 const ModalPopup = ({ isOpen, onClose }) => {
   const [data, setData] = useState({ email: "", password: "" });
+
+  const [userData, setUserData] = useState([]);
+
+  const { login } = useAuth(); // Access login function from authentication context
 
   const onInputChange = (value, key) => {
     setData({ ...data, [key]: value });
   };
 
-  const onLoginClick = () => {
-    const response = axios.post("http://localhost:5000/user/login", data);
-
-    console.log("login successful");
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post("/user/login", data);
+      saveCreds(response.data.token);
+      login(); // Update authentication state upon successful login
+      onClose(); // Close the login modal
+      localStorage.setItem("isLoggedIn", "true");
+    } catch (e) {
+      console.error(e.response.data.message);
+    }
   };
 
   return (
@@ -52,7 +66,7 @@ const ModalPopup = ({ isOpen, onClose }) => {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="teal" onClick={onLoginClick}>
+              <Button colorScheme="teal" onClick={handleLogin}>
                 Login
               </Button>
             </ModalFooter>

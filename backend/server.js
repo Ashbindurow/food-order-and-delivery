@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import routes from "./Routes/index.js";
 import mongoose from "./db/db.js";
+import multer from "multer";
 
 import dotenv from "dotenv";
 
