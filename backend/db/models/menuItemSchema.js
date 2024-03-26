@@ -26,7 +26,7 @@ const menuItemSchema = Schema(
       required: true,
     },
     review: String,
-    quantity: Number,
+    quantityLeft: Number,
   },
   { timestamps: true }
 );
