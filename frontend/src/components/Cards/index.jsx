@@ -14,11 +14,13 @@ import {
 } from "@chakra-ui/react";
 import axios from "../../utils/axios";
 import { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Cards = ({ menuItem }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isAddedToCart, setIsAddedToCart] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleAddToCart = async menuItemId => {
     try {
@@ -28,16 +30,19 @@ const Cards = ({ menuItem }) => {
         quantity: 1, // You can adjust the quantity as needed
       });
       console.log("Item added to cart:", response.data);
+
+      const updatedCarts = response.data.cartItems;
       setIsAddedToCart(true);
+      if (!isAddedToCart) {
+        navigate("/carts");
+      }
     } catch (error) {
       console.log(error.response.data.message);
-      // toast.error(error.message);
     }
   };
 
   return (
     <>
-      {/* <ToastContainer /> */}
       <Card maxW="sm">
         <CardBody>
           <Image
@@ -66,8 +71,13 @@ const Cards = ({ menuItem }) => {
             marginLeft="auto"
             marginRight="auto"
           >
-            <Button variant="solid" colorScheme="pink" border="2px">
-              Buy now
+            <Button
+              variant="solid"
+              colorScheme="pink"
+              border="2px"
+              onClick={() => handleAddToCart(menuItem._id)}
+            >
+              Place Order
             </Button>
             <Button
               variant="outline"

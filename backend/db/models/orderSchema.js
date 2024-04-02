@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
 const orderItemSchema = new Schema({
   menuItem: {
@@ -10,8 +11,13 @@ const orderItemSchema = new Schema({
     type: Number,
     required: true,
   },
-  price: {
+  totalPrice: {
     type: Number,
+    required: true,
+  },
+  shippingAddress: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User.address",
     required: true,
   },
 });
@@ -30,7 +36,7 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "delivered"],
+      enum: ["pending", "confirmed", "out for delivery", "delivered"],
       default: "pending",
     },
   },

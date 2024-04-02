@@ -47,4 +47,30 @@ router.delete("/:id", async (req, res) => {
   res.status(200).json({ message: "Item removed successfully" });
 });
 
+//Route for providing suggestions based on partial input
+router.get("/suggestions", async (req, res) => {
+  try {
+    const partialQuery = req.query.partial;
+    // Perform a case-insensitive search for menu items containing the partial query
+    const suggestions = await MenuItem.find({
+      itemName: { $regex: new RegExp(partialQuery, "i") },
+    }).limit(5);
+    res.status(200).json(suggestions);
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+//edit an item using id
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const body = { ...req.body };
+    await MenuItem.findByIdAndUpdate(id, body, { new: true });
+    res.status(201).json({ message: "MenuItem is updated successfully" });
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 export default router;

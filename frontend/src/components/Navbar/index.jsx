@@ -61,9 +61,12 @@ const Navbar = () => {
   };
 
   const fetchUserData = async () => {
-    const response = await axios.get(`/user/${localStorage.getItem("id")}`);
-    // console.log(response.data);
-    setUserData(response.data);
+    try {
+      const response = await axios.get(`/user/${localStorage.getItem("id")}`);
+      setUserData(response.data);
+    } catch (error) {
+      console.error("error fetching user data: ", error);
+    }
   };
 
   useEffect(() => {
@@ -139,7 +142,9 @@ const Navbar = () => {
               <Avatar src={userData.picture} />
             </MenuButton>
             <MenuList color="black">
-              <MenuItem>Edit Profile</MenuItem>
+              <MenuItem onClick={() => navigate("/user-profile")}>
+                Edit Profile
+              </MenuItem>
               <MenuItem onClick={handleLogout}>Log out</MenuItem>
             </MenuList>
           </Menu>

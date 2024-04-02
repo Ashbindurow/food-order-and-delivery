@@ -29,6 +29,16 @@ const userSchema = Schema(
       type: mongoose.Types.ObjectId,
       ref: "Order",
     },
+    address: [
+      {
+        house: String,
+        street: String,
+        city: String,
+        state: String,
+        zipCode: String,
+        mobileNumber: Number,
+      },
+    ],
   },
 
   { timestamps: true }

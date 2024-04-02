@@ -23,42 +23,25 @@ const CartsPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const userId = localStorage.getItem("id");
 
-  const [quantity, setQuantity] = useState(1); // Initial quantity
-  const [totalPrice, setTotalPrice] = useState(0); // Initialize total price state
-
   const fetchCartItems = async () => {
     try {
       const response = await axios.get(`/carts/${userId}`);
-      console.log(response.data);
       setCartItems(response.data.items);
-      setTotalPrice(response.data.totalPrice);
-      console.log("Total Price =" + totalPrice);
     } catch (e) {
       console.log(e.message);
     }
   };
 
   useEffect(() => {
-    console.log("useEffect triggered");
-    fetchCartItems();
-  }, []);
+    if (isLoggedIn) {
+      fetchCartItems();
+    }
+  }, [isLoggedIn]);
 
-  const handleQuantityChange = async (itemId, change) => {
+  const handleQuantityChange = async (itemId, quantity) => {
     try {
-      const updatedCartItems = cartItems.map(item => {
-        if (item.menuItem._id === itemId) {
-          // Adjust quantity based on the provided change (+1 or -1)
-          const newQuantity = Math.max(1, item.quantity + change); // Ensure quantity doesn't go below 1
-          const newSubtotal = newQuantity * item.menuItem.price;
-          return { ...item, quantity: newQuantity, subtotal: newSubtotal };
-        }
-        return item;
-      });
-      setCartItems(updatedCartItems);
-      await axios.put(`/carts/${userId}/${itemId}`, {
-        quantity: updatedCartItems.find(item => item.menuItem._id === itemId)
-          .quantity,
-      });
+      await axios.put(`/carts/${userId}/${itemId}`, { quantity });
+      fetchCartItems();
     } catch (error) {
       console.error("Error updating quantity:", error.message);
     }
@@ -72,11 +55,19 @@ const CartsPage = () => {
       console.log("Error deleting cart item:", error.message);
     }
   };
+  // Calculate totalPrice
+  const totalPrice = cartItems.reduce((total, item) => {
+    return total + item.subtotal;
+  }, 0);
 
   return (
     <div
       className="carts_page"
-      style={{ backgroundColor: "#f3ff4d", height: "100vh" }}
+      style={{
+        backgroundColor: "#f3ff4d",
+        height: "100vh",
+        paddingBottom: "20px",
+      }}
     >
       <Text
         fontSize="xl"
@@ -109,7 +100,8 @@ const CartsPage = () => {
                 <Stack>
                   <CardBody>
                     <Heading size="md">{item.menuItem.itemName}</Heading>
-                    <Text colorScheme="green.500">
+                    <Text>{item.menuItem.description}</Text>
+                    <Text colorScheme="green.500" mt={2}>
                       Rs.{" "}
                       {item.subtotal
                         ? item.subtotal.toFixed(2)
@@ -122,8 +114,12 @@ const CartsPage = () => {
                         <Button
                           colorScheme="green"
                           onClick={() =>
-                            handleQuantityChange(item.menuItem._id, -1)
+                            handleQuantityChange(
+                              item.menuItem._id,
+                              item.quantity - 1
+                            )
                           } // Decrease quantity by 1
+                          disabled={item.quantity <= 1}
                         >
                           -
                         </Button>
@@ -134,20 +130,22 @@ const CartsPage = () => {
                           max="50"
                           type="number"
                           value={item.quantity}
-                          onChange={e => {
-                            // const newQuantity = parseInt(e.target.value) || 1;
-                            setQuantity(parseInt(e.target.value)); // Update quantity state
+                          onChange={e =>
                             handleQuantityChange(
                               item.menuItem._id,
-                              e.target.value
-                            );
-                          }}
+                              parseInt(e.target.value)
+                            )
+                          }
                         />
                         <Button
                           colorScheme="green"
                           onClick={() =>
-                            handleQuantityChange(item.menuItem._id, 1)
+                            handleQuantityChange(
+                              item.menuItem._id,
+                              item.quantity + 1
+                            )
                           } // Increase quantity by 1
+                          disabled={item.quantity >= 50}
                         >
                           +
                         </Button>
@@ -174,7 +172,12 @@ const CartsPage = () => {
               </Card>
             </Box>
           ))}
-          <CartPageTotalAmount totalPrice={totalPrice} />
+          <CartPageTotalAmount
+            cartItems={cartItems}
+            setCartItems={setCartItems}
+            userId={userId}
+            totalPrice={totalPrice}
+          />
         </Stack>
       ) : (
         <Text align="center">Your cart is empty</Text>

@@ -5,9 +5,12 @@ import axios from "../utils/axios.js";
 
 import Cards from "../components/Cards";
 import { Stack } from "@chakra-ui/react";
+import { useAuth } from "../utils/authContext.jsx";
 
 const HomePage = () => {
   const [menuItems, setMenuItems] = useState([]);
+
+  const { isLoggedIn } = useAuth();
 
   const fetchMenuItems = async () => {
     try {
@@ -19,8 +22,10 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    fetchMenuItems();
-  }, []);
+    if (isLoggedIn) {
+      fetchMenuItems();
+    }
+  }, [isLoggedIn]);
 
   return (
     <div className="home-div" style={{ backgroundColor: "#f3ff4d" }}>
@@ -42,36 +47,40 @@ const HomePage = () => {
       </motion.h1>
 
       <CarousalSlider />
-      <div
-        className="card-container"
-        style={{
-          backgroundColor: "#ff674d",
-          padding: "30px",
-        }}
-      >
-        <h1
+      {isLoggedIn ? (
+        <div
+          className="card-container"
           style={{
-            fontWeight: "bolder",
-            fontSize: "3rem",
-            color: "black",
-            textAlign: "center",
+            backgroundColor: "#ff674d",
+            padding: "30px",
           }}
         >
-          Try our most Delicious dishes ever...
-        </h1>
-        <Stack
-          className="item_cards_container"
-          direction="row"
-          spacing="4"
-          justifyContent="center"
-          alignItems="flex-start"
-          flexWrap="wrap"
-        >
-          {menuItems.map(item => {
-            return <Cards key={item._id} menuItem={item} />;
-          })}
-        </Stack>
-      </div>
+          <h1
+            style={{
+              fontWeight: "bolder",
+              fontSize: "3rem",
+              color: "black",
+              textAlign: "center",
+            }}
+          >
+            Try our most Delicious dishes ever...
+          </h1>
+          <Stack
+            className="item_cards_container"
+            direction="row"
+            spacing="4"
+            justifyContent="center"
+            alignItems="flex-start"
+            flexWrap="wrap"
+          >
+            {menuItems.map(item => {
+              return <Cards key={item._id} menuItem={item} />;
+            })}
+          </Stack>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };

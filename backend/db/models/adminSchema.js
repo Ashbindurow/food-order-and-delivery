@@ -18,6 +18,11 @@ const adminSchema = Schema(
       required: true,
       trim: true,
     },
+    picture: {
+      type: String,
+      default:
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
   },
   {
     timestamps: true,

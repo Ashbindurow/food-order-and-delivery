@@ -1,19 +1,115 @@
-import { useState } from "react";
-import { Text } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Flex,
+  List,
+  ListIcon,
+  ListItem,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { CheckCircleIcon } from "@chakra-ui/icons";
+import axios from "../utils/axios.js";
+import { useAuth } from "../utils/authContext.jsx";
 
 const OrdersPage = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const userId = localStorage.getItem("id");
+  const { isLoggedIn } = useAuth();
+
+  const [orders, setOrders] = useState([]);
+
+  const getOrderStatusChange = status => {
+    switch (status) {
+      case "pending":
+        return "Thank you! We have received your order.";
+      case "confirmed":
+        return "Your food is being prepared.";
+      case "out for delivery":
+        return "Your order is out for delivery.";
+      case "delivered":
+        return "Your order has been delivered.";
+      default:
+        return "";
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`/order/user/${userId}`);
+      setOrders(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      fetchOrders();
+    }
+  }, []);
 
   return (
     <div
       className="home-div"
-      style={{ backgroundColor: "#f3ff4d", height: "100vh" }}
+      style={{
+        backgroundColor: "#f3ff4d",
+        height: "100vh",
+        paddingBottom: "20px",
+      }}
     >
-      {isLoggedIn ? (
-        <h1>You are LOgged in</h1>
+      <Text
+        fontSize="xl"
+        fontWeight="bold"
+        color="blue.500"
+        textTransform="capitalize"
+        letterSpacing="wide"
+        align="center"
+        _hover={{ color: "blue.700", textDecoration: "none" }}
+      >
+        Your Orders
+      </Text>
+      {isLoggedIn && orders.length > 0 ? (
+        <Stack>
+          {orders.map(item => (
+            <Flex
+              flexDirection={{ base: "column", md: "row" }}
+              justifyContent="center"
+              alignItems="center"
+              flexWrap="wrap"
+              key={item._id}
+            >
+              <Card p={10} mt={5}>
+                <CardHeader>
+                  <Text>Order ID : {item._id}</Text>
+                </CardHeader>
+                <CardBody>
+                  <Text color="green.400">
+                    {" "}
+                    {getOrderStatusChange(item.status)}{" "}
+                  </Text>
+                  <Text>Status of the order : {item.status}</Text>
+
+                  <Text>Total Amount: {item.total}/-</Text>
+                </CardBody>
+                <CardFooter>
+                  <List spacing={3}>
+                    {item.items.map(menuItem => (
+                      <ListItem key={menuItem._id} color="yellow.700">
+                        <ListIcon as={CheckCircleIcon} color="green.500" />
+                        {menuItem.menuItem.itemName}
+                      </ListItem>
+                    ))}
+                  </List>
+                </CardFooter>
+              </Card>
+            </Flex>
+          ))}
+        </Stack>
       ) : (
         <Text align="center">Please Login to view your Orders</Text>
-        // <img src="" alt="" />
       )}
     </div>
   );

@@ -1,10 +1,11 @@
 import express from "express";
 import Cart from "../../db/models/cartSchema.js";
+import checkToken from "../../middlewares/checkToken.js";
 
 const router = express.Router();
 
 // Route for adding an item to the cart
-router.post("/", async (req, res) => {
+router.post("/", checkToken, async (req, res) => {
   try {
     const { userId, menuItemId, quantity } = req.body;
     const cartItem = await Cart.findOne({ user: userId });

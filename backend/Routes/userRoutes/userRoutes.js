@@ -89,4 +89,31 @@ router.get("/:id", async (req, res) => {
   res.status(201).json(user);
 });
 
+//get user by Id and Upadate
+router.put("/profile/:id", async (req, res) => {
+  const { id } = req.params;
+  const { picture, address } = req.body;
+
+  try {
+    let user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "user not found" });
+    }
+    if (picture) {
+      user.picture = picture;
+    }
+    if (address && Array.isArray(address)) {
+      if (!user.address || !Array.isArray(user.address)) {
+        user.address = [];
+      }
+      // Add new addresses to the existing ones
+      user.address.push(...address);
+    }
+    await user.save();
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
