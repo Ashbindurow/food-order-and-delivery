@@ -27,7 +27,6 @@ const App = () => {
     <>
       <AuthProvider>
         {isNavbarVisible && <Navbar />}
-        {/* <Navbar /> */}
 
         <Routes>
           <Route path="/" element={<HomePage />} />

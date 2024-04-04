@@ -39,8 +39,9 @@ const AdminLogin = () => {
     try {
       const response = await axios.post(`/admin/login`, data);
       console.log("Response: ", response);
-      login();
       navigate("/admin-home");
+
+      login();
     } catch (error) {
       console.error("error:", error);
       setError("There was an error processing your request");

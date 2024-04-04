@@ -1,12 +1,16 @@
 import { Box, Flex, Text, Button, Image } from "@chakra-ui/react";
 import { useAuth } from "../../../../utils/authContext";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const { isLoggedIn, logout } = useAuth();
 
+  const navigate = useNavigate();
+
   const handleLogout = () => {
     logout();
+    navigate("/admin");
   };
 
   return (

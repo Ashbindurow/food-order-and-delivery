@@ -5,9 +5,9 @@ import checkToken from "../../middlewares/checkToken.js";
 const router = express.Router();
 
 // Route for adding an item to the cart
-router.post("/", checkToken, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const { userId, menuItemId, quantity } = req.body;
+    const { userId, menuItemId, quantity, shippingAddress } = req.body;
     const cartItem = await Cart.findOne({ user: userId });
 
     if (!cartItem) {
@@ -15,6 +15,7 @@ router.post("/", checkToken, async (req, res) => {
       const newCart = await Cart.create({
         user: userId,
         items: [{ menuItem: menuItemId, quantity }],
+        shippingAddress: shippingAddress,
       });
       return res.status(201).json(newCart);
     } else {
@@ -30,6 +31,7 @@ router.post("/", checkToken, async (req, res) => {
         // If item doesn't exist, add it to the cart
         cartItem.items.push({ menuItem: menuItemId, quantity });
       }
+      cartItem.shippingAddress = shippingAddress;
 
       await cartItem.save();
       return res.status(201).json(cartItem);

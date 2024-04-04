@@ -58,15 +58,15 @@ const CartPageTotalAmount = ({
         quantity: item.quantity,
         totalPrice: item.subtotal,
         // shippingAddress: selectedAddressObject,
-        shippingAddress: selectedAddressObject
-          ? selectedAddressObject._id
-          : null,
       }));
 
       const orderData = {
         user: userId,
         items: orderItems,
         total: totalPrice,
+        shippingAddress: selectedAddressObject
+          ? `${selectedAddressObject.house}, ${selectedAddressObject.street}, ${selectedAddressObject.city}, ${selectedAddressObject.state} - ${selectedAddressObject.zipCode}`
+          : null,
       };
 
       await axios.post("/order", orderData);
@@ -75,8 +75,9 @@ const CartPageTotalAmount = ({
       setShowAlert(true);
 
       setTimeout(() => {
-        navigate("/");
         setCartItems([]);
+
+        navigate("/");
       }, 2000);
     } catch (error) {
       console.error(error);

@@ -66,9 +66,12 @@ router.put("/:id", async (req, res) => {
 });
 
 // Route to get all orders from all users (for admins)
-router.get("/all", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const orders = await Order.find();
+    const orders = await Order.find()
+      .populate({ path: "items.menuItem", model: "MenuItem" })
+      .populate({ path: "user", model: "User" })
+      .exec();
     res.status(200).json(orders);
   } catch (error) {
     console.error("Error fetching all orders:", error);

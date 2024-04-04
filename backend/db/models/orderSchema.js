@@ -15,11 +15,6 @@ const orderItemSchema = new Schema({
     type: Number,
     required: true,
   },
-  shippingAddress: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User.address",
-    required: true,
-  },
 });
 
 const orderSchema = new Schema(
@@ -36,8 +31,18 @@ const orderSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "out for delivery", "delivered"],
+      enum: [
+        "pending",
+        "cancelled",
+        "confirmed",
+        "out for delivery",
+        "delivered",
+      ],
       default: "pending",
+    },
+    shippingAddress: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
