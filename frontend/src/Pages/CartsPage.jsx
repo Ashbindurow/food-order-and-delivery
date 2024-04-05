@@ -26,6 +26,7 @@ const CartsPage = () => {
   const fetchCartItems = async () => {
     try {
       const response = await axios.get(`/carts/${userId}`);
+      console.log(response.data.items);
       setCartItems(response.data.items);
     } catch (e) {
       console.log(e.message);
@@ -65,7 +66,7 @@ const CartsPage = () => {
       className="carts_page"
       style={{
         backgroundColor: "#f3ff4d",
-        height: cartItems ? "100%" : "100vh",
+        height: cartItems.length > 0 ? "100%" : "100vh",
         paddingBottom: "20px",
       }}
     >

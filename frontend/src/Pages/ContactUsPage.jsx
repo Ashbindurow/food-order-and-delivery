@@ -1,4 +1,6 @@
 import React from "react";
+import { WarningTwoIcon } from "@chakra-ui/icons";
+import { Text } from "@chakra-ui/react";
 
 const ContactUsPage = () => {
   return (
@@ -8,9 +10,10 @@ const ContactUsPage = () => {
         height: "100vh",
       }}
     >
-      <h1 style={{ textAlign: "center" }}>
+      <Text style={{ textAlign: "center", color }}>
+        <WarningTwoIcon />
         Tracking order page is under maintenance
-      </h1>
+      </Text>
     </div>
   );
 };

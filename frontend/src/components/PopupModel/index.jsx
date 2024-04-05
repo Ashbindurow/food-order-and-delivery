@@ -13,17 +13,20 @@ import {
   Button,
   useDisclosure,
   Toast,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
 import axios from "../../utils/axios.js";
 import { useState, useEffect } from "react";
 import { saveCreds } from "../../utils/index.js";
 import { useAuth } from "../../utils/authContext.jsx";
 import { ToastContainer, toast } from "react-toastify";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const ModalPopup = ({ isOpen, onClose }) => {
   const [data, setData] = useState({ email: "", password: "" });
 
-  const [userData, setUserData] = useState([]);
+  const [showPassword, setShowPassword] = useState(true);
 
   const { login } = useAuth(); // Access login function from authentication context
 
@@ -54,15 +57,29 @@ const ModalPopup = ({ isOpen, onClose }) => {
             <ModalBody>
               <FormControl>
                 <FormLabel>Enter Your Email</FormLabel>
+                <InputGroup></InputGroup>
                 <Input
                   type="email"
                   onChange={e => onInputChange(e.target.value, "email")}
                 />
                 <FormLabel>Enter Your Password</FormLabel>
-                <Input
-                  type="password"
-                  onChange={e => onInputChange(e.target.value, "password")}
-                />
+                <InputGroup>
+                  <Input
+                    type={showPassword ? "password" : "text"}
+                    onChange={e => onInputChange(e.target.value, "password")}
+                  />
+                  <InputRightElement>
+                    {showPassword ? (
+                      <ViewOffIcon
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    ) : (
+                      <ViewIcon
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    )}
+                  </InputRightElement>
+                </InputGroup>
               </FormControl>
             </ModalBody>
             <ModalFooter>

@@ -74,8 +74,9 @@ const CartPageTotalAmount = ({
       console.log("order placed ", orderData);
       setShowAlert(true);
 
-      setTimeout(() => {
+      setTimeout(async () => {
         setCartItems([]);
+        await axios.delete(`/carts/${userId}`);
 
         navigate("/");
       }, 2000);

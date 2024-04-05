@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-
+import { saveCreds } from "../../utils/index.js";
 import { useAuth } from "../../utils/authContext.jsx";
 
 const AdminLogin = () => {
@@ -40,8 +40,10 @@ const AdminLogin = () => {
     try {
       const response = await axios.post(`/admin/login`, data);
       console.log("Response: ", response);
+      saveCreds(response.data.token);
       navigate("/admin-order");
       login();
+      localStorage.setItem("isLoggedIn", "true");
     } catch (error) {
       console.error("error:", error);
       setError("There was an error processing your request");
