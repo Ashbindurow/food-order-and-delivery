@@ -14,6 +14,7 @@ import {
   FormLabel,
   Input,
   Checkbox,
+  Select,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 import axios from "../../../utils/axios.js";
@@ -21,8 +22,9 @@ import { useEffect, useState } from "react";
 
 const Items = () => {
   const [items, setItems] = useState([]);
-  const [editingItem, setEditingItem] = useState(null);
   const [showForm, setShowForm] = useState(false);
+
+  const [editBtn, seteditBtn] = useState(false);
 
   const [formData, setFormData] = useState({
     itemName: "",
@@ -77,15 +79,22 @@ const Items = () => {
       console.log("Submitting the data ", formData);
 
       setFormData({
-        itemName: "",
-        price: "",
-        description: "",
         availability: false,
         image: null,
       });
       fetchItems();
     } catch (error) {
       console.error("Error in submitting the form: ", error);
+    }
+  };
+  const handleAvailabilityChange = async (itemId, availability) => {
+    try {
+      await axios.patch(`/menuitem/${itemId}/availability`, { availability });
+      seteditBtn(!editBtn);
+
+      fetchItems();
+    } catch (error) {
+      console.error("Error updating availability: ", error);
     }
   };
 
@@ -196,8 +205,26 @@ const Items = () => {
                       boxSize={4}
                       color="blue.500"
                       cursor="pointer"
-                      onClick={() => handleEdit(item._id)}
+                      onClick={() => seteditBtn(!editBtn)}
                     />
+                    {editBtn ? (
+                      <Box>
+                        <Select
+                          onChange={e =>
+                            handleAvailabilityChange(
+                              item._id,
+                              e.target.value === "true"
+                            )
+                          }
+                          defaultValue={item.availability.toString()}
+                        >
+                          <option value="true">Available</option>
+                          <option value="false">Not Available</option>
+                        </Select>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
                   </Box>
                 </Flex>
               ))}

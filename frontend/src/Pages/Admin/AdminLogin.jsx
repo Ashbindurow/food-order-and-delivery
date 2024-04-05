@@ -9,6 +9,7 @@ import {
   FormLabel,
   FormHelperText,
   VStack,
+  HStack,
   Container,
   InputRightElement,
   InputGroup,
@@ -39,7 +40,7 @@ const AdminLogin = () => {
     try {
       const response = await axios.post(`/admin/login`, data);
       console.log("Response: ", response);
-      navigate("/admin-home");
+      navigate("/admin-order");
       login();
     } catch (error) {
       console.error("error:", error);
@@ -84,9 +85,18 @@ const AdminLogin = () => {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <Button colorScheme="messenger" onClick={handleSubmit}>
-            Log In
-          </Button>
+          <HStack>
+            <Button colorScheme="messenger" onClick={handleSubmit}>
+              Log In
+            </Button>
+            <Button
+              variant="outline"
+              colorScheme="red"
+              onClick={() => navigate("/admin-signup")}
+            >
+              SIGN UP
+            </Button>
+          </HStack>
         </VStack>
       </Box>
       {error && (

@@ -79,4 +79,13 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Order.findByIdAndDelete(id);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete the order" });
+  }
+});
+
 export default router;

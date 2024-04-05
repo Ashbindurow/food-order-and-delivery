@@ -65,7 +65,7 @@ const CartsPage = () => {
       className="carts_page"
       style={{
         backgroundColor: "#f3ff4d",
-        height: cartItems ? "100svh" : "100vh",
+        height: cartItems ? "100%" : "100vh",
         paddingBottom: "20px",
       }}
     >

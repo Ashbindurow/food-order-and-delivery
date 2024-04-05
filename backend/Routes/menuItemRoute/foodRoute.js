@@ -73,4 +73,17 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+router.patch("/:id/availability", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { availability } = req.body;
+    await MenuItem.findByIdAndUpdate(id, { availability }, { new: true });
+    res
+      .status(200)
+      .json({ message: "Item availability is updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "error in updating the availability" });
+  }
+});
+
 export default router;

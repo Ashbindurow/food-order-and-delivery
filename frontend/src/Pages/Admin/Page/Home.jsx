@@ -1,6 +1,4 @@
 import React from "react";
-import AdminLogin from "../AdminLogin";
-import AdminSignUp from "../AdminSignup";
 import {
   Container,
   Box,
@@ -10,6 +8,7 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
+
 import { useAuth } from "../../../utils/authContext";
 import Navbar from "../components/Navbar";
 
@@ -32,7 +31,9 @@ const AdminHome = () => {
         borderRadius="lg"
         borderColor="gold"
         p="10px 0"
-      ></Box>
+      >
+        <Text>Home Page</Text>
+      </Box>
     </div>
   );
 };

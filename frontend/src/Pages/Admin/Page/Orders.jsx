@@ -14,7 +14,7 @@ import {
   Flex,
   Button,
 } from "@chakra-ui/react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navbar/index.jsx";
 import axios from "../../../utils/axios.js";
 
 const Orders = () => {
@@ -46,11 +46,11 @@ const Orders = () => {
   return (
     <div>
       <Navbar />
-
       <Box bg="blue.200">
         <Heading>Orders</Heading>
         {orders.map(order => (
           <Card
+            key={order._id}
             borderWidth="1px" // Set border width
             borderColor="gray.200" // Set border color
             borderRadius="md" // Set border radius for a rounded border
@@ -76,7 +76,7 @@ const Orders = () => {
               <Stack divider={<StackDivider />} spacing="4">
                 <Flex justifyContent="space-evenly" alignItems="center">
                   {order.items.map(item => (
-                    <Box>
+                    <Box key={item._id}>
                       <Text color="yellow.500">{item.menuItem.itemName}</Text>
                       <Text>Quantity: {item.quantity}</Text>
                     </Box>
