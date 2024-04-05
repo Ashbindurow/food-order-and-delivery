@@ -10,9 +10,10 @@ import {
   Input,
   Button,
   Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { AlertIcon } from "@chakra-ui/icons";
+
 const AdminSignUp = () => {
   const navigate = useNavigate();
 
@@ -22,14 +23,24 @@ const AdminSignUp = () => {
     password: "",
   });
 
-  const [alert, setAlert] = useState(false);
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const handleSubmit = async () => {
-    await axios.post(`/admin/signup`, data);
-    setAlert(!alert);
-    setTimeout(() => {
-      navigate("/admin-login");
-    }, 2000);
+    try {
+      await axios.post(`/admin/signup`, data);
+      setAlert({
+        type: "success",
+        message: "Signup Successful! Redirecting to login page...",
+      });
+      setTimeout(() => {
+        navigate("/admin");
+      }, 2000);
+    } catch (error) {
+      setAlert({
+        type: "error",
+        message: "An error occurred during signup. Please try again later.",
+      });
+    }
   };
   const handleInputChange = (value, key) => {
     setData({ ...data, [key]: value });
@@ -82,13 +93,11 @@ const AdminSignUp = () => {
           </Button>
         </VStack>
       </Box>
-      {alert ? (
-        <Alert status="success">
+      {alert.type && (
+        <Alert status={alert.type}>
           <AlertIcon />
-          Signup Successful !!!
+          {alert.message}
         </Alert>
-      ) : (
-        ""
       )}
     </Container>
   );

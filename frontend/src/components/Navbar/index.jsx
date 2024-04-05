@@ -130,8 +130,8 @@ const Navbar = () => {
           </li>
           <li>
             <NavLink to={"/contact"}>
-              {/* <PhoneOutlined /> Contact */}
-              <EnvironmentOutlined /> Track Order
+              <PhoneOutlined /> About
+              {/* <EnvironmentOutlined /> Track Order */}
             </NavLink>
           </li>
         </ul>
