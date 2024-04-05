@@ -11,18 +11,17 @@ import {
   Input,
   Button,
   useDisclosure,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axios.js";
-import { useAuth } from "../../utils/authContext.jsx";
-import { saveCreds } from "../../utils";
 
 const ModalPopupSignIn = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
-  const { isLoggedIn, login } = useAuth();
-
+  const [alert, setAlert] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
     email: "",
@@ -34,17 +33,19 @@ const ModalPopupSignIn = ({ isOpen, onClose }) => {
     setUserData({ ...userData, [name]: value });
   };
 
-  // const handleImageChange = e => {
-  //   setUserData({ ...userData, profileImage: e.target.files[0] });
-  // };
-
   const handleSubmit = async () => {
-    await axios.post(`/user/signup`, userData);
-    saveCreds(response.data.token);
-    login(); // Update authentication state upon successful login
-    onClose(); // Close the login modal
-    localStorage.setItem("isLoggedIn", "true");
-    navigate("/");
+    try {
+      const response = await axios.post(`/user/signup`, userData);
+
+      onClose(); // Close the login modal
+      setAlert(true);
+      setTimeout(() => {
+        setAlert(false);
+      }, 2000);
+      navigate("/");
+    } catch (error) {
+      console.error("error in signing up", error);
+    }
   };
   return (
     <div className="modal-div">
@@ -100,6 +101,13 @@ const ModalPopupSignIn = ({ isOpen, onClose }) => {
           </ModalContent>
         </ModalOverlay>
       </Modal>
+      {/* Alert displayed after successful signup */}
+      {alert && (
+        <Alert status="success">
+          <AlertIcon />
+          Signup Successful! Please login.
+        </Alert>
+      )}
     </div>
   );
 };
