@@ -55,6 +55,7 @@ const Navbar = () => {
   const handleLogin = async () => {
     login(); // Update authentication state upon successful login
     onCloseLogIn(); //closes the login model
+    onOpenSignUp();
   };
   const handleLogout = async () => {
     logout();
@@ -80,7 +81,11 @@ const Navbar = () => {
         onClose={onCloseLogIn}
         onLogin={handleLogin}
       />
-      <ModalPopupSignIn isOpen={isSignUpOpen} onClose={onSignUpLogIn} />
+      <ModalPopupSignIn
+        isOpen={isSignUpOpen}
+        onClose={onSignUpLogIn}
+        onLogin={handleLogin}
+      />
 
       <motion.nav
         initial={{ opacity: 0, y: -50 }}

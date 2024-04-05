@@ -46,7 +46,7 @@ const AdminLogin = () => {
       localStorage.setItem("isLoggedIn", "true");
     } catch (error) {
       console.error("error:", error);
-      setError("There was an error processing your request");
+      setError("email or password incorrect");
     }
   };
 

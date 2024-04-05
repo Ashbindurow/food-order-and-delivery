@@ -30,11 +30,9 @@ const HomePage = () => {
   return (
     <div className="home-div" style={{ backgroundColor: "#f3ff4d" }}>
       <motion.h1
-        key="heading"
-        initial={{ rotate: 3 }} // Initial position and opacity
-        animate={{ rotate: -3 }} // Animation when component mounts
-        exit={{ rotate: 0 }} // Animation when component unmounts
-        transition={{ type: "spring", stiffness: 150 }} // Spring animation
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 150 }}
         style={{
           textAlign: "center",
           textTransform: "uppercase",
@@ -45,10 +43,19 @@ const HomePage = () => {
       >
         Here are our dishes
       </motion.h1>
+      <motion.div
+        initial={{ scale: 0.5, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 1, delay: 1 }}
+      >
+        <CarousalSlider />
+      </motion.div>
 
-      <CarousalSlider />
-      {isLoggedIn ? (
-        <div
+      {isLoggedIn && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 150 }}
           className="card-container"
           style={{
             backgroundColor: "#ff674d",
@@ -77,9 +84,7 @@ const HomePage = () => {
               return <Cards key={item._id} menuItem={item} />;
             })}
           </Stack>
-        </div>
-      ) : (
-        ""
+        </motion.div>
       )}
     </div>
   );
