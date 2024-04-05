@@ -112,4 +112,23 @@ router.delete("/:userId/:itemId", async (req, res) => {
   }
 });
 
+//empty the cartItem when the order is placed
+
+router.delete("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    // Find the user's cart and remove all items
+    const cart = await Cart.findOneAndUpdate(
+      { user: userId },
+      { $set: { items: [] } }, // Set the items array to an empty array
+      { new: true }
+    );
+
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 export default router;
