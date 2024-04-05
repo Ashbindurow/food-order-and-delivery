@@ -22,7 +22,7 @@ const Cards = ({ menuItem }) => {
 
   const navigate = useNavigate();
 
-  const handleAddToCart = async menuItemId => {
+  const handleAddToCart = async (menuItemId, isPlaceOrder) => {
     try {
       const response = await axios.post("/carts", {
         userId: localStorage.getItem("id"), // Replace with the actual user ID
@@ -33,7 +33,7 @@ const Cards = ({ menuItem }) => {
 
       const updatedCarts = response.data.cartItems;
       setIsAddedToCart(true);
-      if (!isAddedToCart) {
+      if (isPlaceOrder) {
         navigate("/carts");
       }
     } catch (error) {
@@ -75,14 +75,14 @@ const Cards = ({ menuItem }) => {
               variant="solid"
               colorScheme="pink"
               border="2px"
-              onClick={() => handleAddToCart(menuItem._id)}
+              onClick={() => handleAddToCart(menuItem._id, true)}
             >
               Place Order
             </Button>
             <Button
               variant="outline"
               colorScheme="pink"
-              onClick={() => handleAddToCart(menuItem._id)}
+              onClick={() => handleAddToCart(menuItem._id, false)}
               isDisabled={isAddedToCart}
             >
               {isAddedToCart ? "Added to cart" : "Add to cart"}

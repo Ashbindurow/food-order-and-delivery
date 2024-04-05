@@ -23,7 +23,7 @@ const Orders = () => {
   const fetchAllOrders = async () => {
     const response = await axios.get(`/order`);
     console.log(response.data);
-    setOrders(response.data);
+    setOrders(response.data.reverse());
   };
 
   useEffect(() => {
@@ -46,55 +46,60 @@ const Orders = () => {
   return (
     <div>
       <Navbar />
-      <Box>
-        <Heading>Orders page</Heading>
+
+      <Box bg="blue.200">
+        <Heading>Orders</Heading>
         {orders.map(order => (
-          <Container key={order._id}>
-            <Card>
-              <CardHeader>
-                <Text>
-                  order id: <Text color="blue.600">{order._id}</Text>
-                </Text>
-              </CardHeader>
-              <CardBody>
-                <Text>
-                  Shipping Address :
-                  <Text color="blue.600">{order.shippingAddress}</Text>
-                </Text>
-                <Text>Order status: {order.status}</Text>
-                <Text textAlign="center" fontSize="md">
-                  ITEMS ORDERED
-                </Text>
-                <Stack divider={<StackDivider />} spacing="4">
+          <Card
+            borderWidth="1px" // Set border width
+            borderColor="gray.200" // Set border color
+            borderRadius="md" // Set border radius for a rounded border
+            p="4" // Set padding'
+            mb={4}
+          >
+            <CardBody>
+              <Text>
+                order id: <span style={{ color: "blue" }}>{order._id}</span>
+              </Text>
+
+              <Text>
+                Shipping Address :
+                <span style={{ color: "blue" }}>{order.shippingAddress}</span>
+              </Text>
+              <Text>
+                Order status:
+                <span style={{ color: "blue" }}>{order.status}</span>
+              </Text>
+              <Text textAlign="center" fontSize="md">
+                ITEMS ORDERED
+              </Text>
+              <Stack divider={<StackDivider />} spacing="4">
+                <Flex justifyContent="space-evenly" alignItems="center">
                   {order.items.map(item => (
-                    <Flex justifyContent="space-between" alignItems="center">
-                      <Box>
-                        <Text color="yellow.500">{item.menuItem.itemName}</Text>
-                        <Text>Quantity: {item.quantity}</Text>
-                      </Box>
-                      <Box>
-                        <Select
-                          size="sm"
-                          value={order.status}
-                          onChange={e =>
-                            handleStatusChange(order._id, e.target.value)
-                          }
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="cancelled">Cancelled</option>
-                          <option value="out for delivery">
-                            Out for Delivery
-                          </option>
-                          <option value="delivered">Delivered</option>
-                        </Select>
-                      </Box>
-                    </Flex>
+                    <Box>
+                      <Text color="yellow.500">{item.menuItem.itemName}</Text>
+                      <Text>Quantity: {item.quantity}</Text>
+                    </Box>
                   ))}
-                </Stack>
-              </CardBody>
-            </Card>
-          </Container>
+                  <Box>
+                    <Select
+                      size="sm"
+                      value={order.status}
+                      onChange={e =>
+                        handleStatusChange(order._id, e.target.value)
+                      }
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="out for delivery">Out for Delivery</option>
+                      <option value="delivered">Delivered</option>
+                    </Select>
+                  </Box>
+                </Flex>
+              </Stack>
+            </CardBody>
+          </Card>
         ))}
       </Box>
     </div>

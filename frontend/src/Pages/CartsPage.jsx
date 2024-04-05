@@ -65,7 +65,7 @@ const CartsPage = () => {
       className="carts_page"
       style={{
         backgroundColor: "#f3ff4d",
-        height: "100vh",
+        height: cartItems ? "100svh" : "100vh",
         paddingBottom: "20px",
       }}
     >
@@ -133,7 +133,7 @@ const CartsPage = () => {
                           onChange={e =>
                             handleQuantityChange(
                               item.menuItem._id,
-                              parseInt(e.target.value)
+                              Math.max(1, parseInt(e.target.value))
                             )
                           }
                         />

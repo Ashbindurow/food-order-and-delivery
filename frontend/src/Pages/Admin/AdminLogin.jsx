@@ -40,7 +40,6 @@ const AdminLogin = () => {
       const response = await axios.post(`/admin/login`, data);
       console.log("Response: ", response);
       navigate("/admin-home");
-
       login();
     } catch (error) {
       console.error("error:", error);

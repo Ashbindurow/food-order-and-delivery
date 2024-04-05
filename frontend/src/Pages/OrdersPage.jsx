@@ -39,8 +39,7 @@ const OrdersPage = () => {
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`/order/user/${userId}`);
-      setOrders(response.data);
-      console.log(response.data);
+      setOrders(response.data.reverse());
     } catch (error) {
       console.error("Error fetching orders:", error);
     }
@@ -56,7 +55,7 @@ const OrdersPage = () => {
       className="home-div"
       style={{
         backgroundColor: "#f3ff4d",
-        height: "100vh",
+        height: isLoggedIn ? "100%" : "100vh",
         paddingBottom: "20px",
       }}
     >

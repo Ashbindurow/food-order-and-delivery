@@ -24,7 +24,7 @@ const Navbar = () => {
           <NavLink to={"/admin-items"}>
             <Text>Items</Text>
           </NavLink>
-          <NavLink to={"/admin-customers"}>
+          <NavLink to={"/admin-customer"}>
             <Text>customers</Text>
           </NavLink>
           <Button onClick={handleLogout}>Log out</Button>
