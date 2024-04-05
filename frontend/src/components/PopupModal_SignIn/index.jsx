@@ -17,10 +17,13 @@ import {
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axios.js";
+import { useAuth } from "../../utils/authContext.jsx";
+import { saveCreds } from "../../utils";
 
 const ModalPopupSignIn = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
+  const { isLoggedIn, login } = useAuth();
   const [alert, setAlert] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
@@ -36,7 +39,6 @@ const ModalPopupSignIn = ({ isOpen, onClose }) => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`/user/signup`, userData);
-
       onClose(); // Close the login modal
       setAlert(true);
       setTimeout(() => {
