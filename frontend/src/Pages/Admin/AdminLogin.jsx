@@ -64,6 +64,7 @@ const AdminLogin = () => {
           <FormControl isRequired>
             <FormLabel>Email Address</FormLabel>
             <Input
+              isRequired
               backgroundColor={"white"}
               color={"black"}
               onChange={e => handleInputChange(e.target.value, "email")}
@@ -73,6 +74,7 @@ const AdminLogin = () => {
             <FormLabel>Password</FormLabel>
             <InputGroup>
               <Input
+                isRequired
                 backgroundColor={"white"}
                 color={"black"}
                 type={show ? "text" : "password"}
